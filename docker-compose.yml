@@ -35,12 +35,11 @@ services:
       - "11434:11434"
     volumes:
       - ollama:/root/.ollama
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities: [gpu]
-    command: ["ollama", "run", "llama3.2"]
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - capabilities: [cpu]
 
 volumes:
   postgres_data:
