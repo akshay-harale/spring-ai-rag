@@ -29,11 +29,19 @@ services:
 
   # Ollama container with llama3.2 model
   ollama:
-    image: ollama/llama:3.2
+    image: ollama/ollama
+    container_name: ollama
     ports:
       - "11434:11434"
-    environment:
-      MODEL_NAME: llama3.2
+    volumes:
+      - ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    command: ["ollama", "run", "llama3.2"]
 
 volumes:
   postgres_data:
+  ollama:
