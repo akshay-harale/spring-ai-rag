@@ -13,7 +13,7 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Stage 2: Run the application
-FROM openjdk:17-jre-slim
+FROM openjdk:17-ea-slim
 
 # Set the working directory in the container
 WORKDIR /app
