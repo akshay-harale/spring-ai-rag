@@ -1,0 +1,2 @@
+This is a sample document for testing the RAG application.
+up
