@@ -36,6 +36,7 @@ public class RagChatConfiguration {
             3. Any relevant caveats or limitations about the answer
 
             Remember: You are analyzing and explaining document content, not creating new information or making assumptions beyond the provided context.
+            Query: {{query}}
             """;
 
     @Bean
