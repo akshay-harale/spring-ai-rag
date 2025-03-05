@@ -75,8 +75,8 @@ public class EmbeddingService {
             PagePdfDocumentReader pdfReader = new PagePdfDocumentReader(resource,
                     PdfDocumentReaderConfig.builder()
                             .withPageExtractedTextFormatter(ExtractedTextFormatter.builder()
-                                    .withNumberOfBottomTextLinesToDelete(3)
-                                    .withNumberOfTopPagesToSkipBeforeDelete(1)
+//                                    .withNumberOfBottomTextLinesToDelete(3)
+//                                    .withNumberOfTopPagesToSkipBeforeDelete(1)
                                     .build())
                             .build());
             TokenTextSplitter tokenTextSplitter = new TokenTextSplitter();
