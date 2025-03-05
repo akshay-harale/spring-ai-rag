@@ -1,35 +1,47 @@
 package com.rag.controller;
 
+import com.rag.entity.DocumentStatus;
 import com.rag.service.document.DocumentService;
 import com.rag.service.embedding.EmbeddingService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 public class ChatController {
 
     private final DocumentService documentService;
-
-    
     private final EmbeddingService embeddingService;
 
     @GetMapping("/chat")
-    @ResponseBody
-    public String chat(@RequestParam("message") String message) {
-        return embeddingService.queryLLM(message);
+    public ResponseEntity<String> chat(@RequestParam("message") String message, @RequestParam(value = "documentId", required = false) UUID documentId) {
+        try {
+            String response = embeddingService.queryLLM(message, documentId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing query: " + e.getMessage());
+        }
     }
 
-    @GetMapping("/loadDocument")
-    @ResponseBody
-    public void loadDocuments() throws Exception {
-        embeddingService.generateEmbedding();
+    @PostMapping(value="/loadDocument", consumes = {"multipart/form-data"})
+    public ResponseEntity<String> loadDocument(@RequestParam("file") MultipartFile file) {
+        try {
+            embeddingService.generateEmbedding(file);
+            return ResponseEntity.ok("Document loaded successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error loading document: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/documentStatus")
+    public ResponseEntity<DocumentStatus> getDocumentStatus() {
+        return documentService.getLatestDocumentStatus()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

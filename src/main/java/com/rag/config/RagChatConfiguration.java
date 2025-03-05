@@ -9,6 +9,8 @@ import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 @Configuration
 public class RagChatConfiguration {
@@ -40,13 +42,8 @@ public class RagChatConfiguration {
             """;
 
     @Bean
-    ChatClient ragChatClient(ChatClient.Builder chatClientBuilder,
-                             RetrievalAugmentationAdvisor retrievalAugmentationAdvisor) {
+    ChatClient ragChatClient(ChatClient.Builder chatClientBuilder) {
         return chatClientBuilder
-                .defaultAdvisors(
-                        new SimpleLoggerAdvisor(),
-                        retrievalAugmentationAdvisor
-                )
                 .build();
     }
 
@@ -54,18 +51,23 @@ public class RagChatConfiguration {
     RetrievalAugmentationAdvisor retrievalAugmentationAdvisor(VectorStore vectorStore) {
         VectorStoreDocumentRetriever documentRetriever = VectorStoreDocumentRetriever.builder()
                 .vectorStore(vectorStore)
-                .similarityThreshold(0.50)
+                .similarityThreshold(0.25)
                 .topK(5)
                 .build();
 
         ContextualQueryAugmenter queryAugmenter = ContextualQueryAugmenter.builder()
                 .allowEmptyContext(true)
-                .promptTemplate(new PromptTemplate(SYSTEM_PROMPT))
+                //.promptTemplate(new PromptTemplate(SYSTEM_PROMPT))
                 .build();
 
         return RetrievalAugmentationAdvisor.builder()
                 .documentRetriever(documentRetriever)
                 .queryAugmenter(queryAugmenter)
                 .build();
+    }
+
+    @Bean
+    public MultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
     }
 }
