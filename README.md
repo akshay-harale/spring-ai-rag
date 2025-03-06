@@ -1,26 +1,75 @@
 # Spring AI Rag
 
 ## Introduction
-Spring AI Rag is a configuration project for setting up a chat client with retrieval-augmented generation (RAG) capabilities. This project uses Spring Framework to configure and integrate various components for document retrieval and augmentation.
+Spring AI Rag is a configuration project for setting up a chat client with retrieval-augmented generation (RAG) capabilities. This project uses Spring Framework with Ollama for LLM integration and pgvector for vector similarity search.
 
-## Project Structure
-- **src/main/java/com/rag/config/RagChatConfiguration.java**: Contains the main configuration for the chat client and retrieval augmentation advisor.
+## Prerequisites
+
+### 1. Docker Setup
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Ensure Docker Compose is installed (included with Docker Desktop)
+- Minimum system requirements:
+  - 8GB RAM recommended
+  - x86_64 or ARM64 processor
+
+### 2. PostgreSQL with pgvector
+- No manual installation required
+- The application uses pgvector/pgvector:0.8.0-pg17
+- Automatically configured through Docker Compose
+
+### 3. Ollama Setup
+- Automatically configured through Docker Compose
+- Uses llama3.2 model
+- No manual installation required when using Docker setup
 
 ## Installation
-To set up this project, follow these steps:
-1. Clone the repository:
- `git clone https://github.com/akshay-harale/spring-ai-rag.git`
-2. Navigate to the project directory:
- `cd spring-ai-rag`
-4. Build the project (assuming you are using Maven):
-`mvn clean install`
 
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/akshay-harale/spring-ai-rag.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd spring-ai-rag
+   ```
+
+3. Start the application using Docker Compose:
+   ```bash
+   docker-compose up -d
+   ```
+   This will:
+   - Start PostgreSQL with pgvector extension
+   - Launch Ollama service with llama3.2 model
+   - Build and run the Spring Boot application
+
+4. Verify all services are running:
+   ```bash
+   docker-compose ps
+   ```
+
+## Configuration
+
+### Database Configuration
+- Database Name: ragdb
+- Default User: raguser
+- Default Password: ragpass
+- Port: 5432
+
+### Ollama Configuration
+- Base URL: http://localhost:11434/
+- Model: llama3.2
+- Temperature: 0.7
+
+### Vector Store Configuration
+- Index Type: HNSW (Hierarchical Navigable Small World)
+- Distance Type: COSINE_DISTANCE
+- Dimensions: 384
+- Batching Strategy: TOKEN_COUNT
+- Max Document Batch Size: 10000
 
 ## Usage
-To use the chat client configured in this project:
-1. Ensure that you have the necessary vector store setup.
-2. Run the application: mvn spring-boot:run
-3. The chat client will be available for use with the configured retrieval augmentation functionalities.
+The application will be available at http://localhost:8080
 
 ## Contributing
 If you wish to contribute to this project:
