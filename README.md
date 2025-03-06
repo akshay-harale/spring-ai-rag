@@ -1,5 +1,7 @@
 # Spring AI Rag
 
+**Note:** The Docker setup for Ollama is not working as expected. Please set up Ollama locally without Docker.
+
 ## Introduction
 Spring AI Rag is a configuration project for setting up a chat client with retrieval-augmented generation (RAG) capabilities. This project uses Spring Framework with Ollama for LLM integration and pgvector for vector similarity search.
 
